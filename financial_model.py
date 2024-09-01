@@ -20,11 +20,16 @@ class FinancialModel():
         self._power_model = power_model
         self._electricity_model = electricity_model
 
+        self._yearly_miner_costs_fraction = 0
+
         self._num_samples = self._electricity_model._num_samples
         self._simulated_hash_prices = self.sample_lognormal_hash_price()
 
     def set_mining_pool_fees(self, mining_pool_fees) -> None:
         self._mining_pool_fees = mining_pool_fees
+
+    def set_yearly_miner_costs_fraction(self, yearly_miner_costs_fraction):
+        self._yearly_miner_costs_fraction = yearly_miner_costs_fraction
 
     def set_hash_price_mean(self, hash_price_mean) -> None:
         if self._hash_price_mean == hash_price_mean:
@@ -73,9 +78,10 @@ class FinancialModel():
     def get_annual_miner_net_revenue_per_sample(self) -> np.ndarray:
         bitcoin_mining_revenue = self.get_annual_miner_hash_revenue_per_sample()*(1 - self._mining_pool_fees) 
         operating_costs = self.get_annual_electricity_cost_of_mining_per_sample() * (1 + self._power_model.get_opex_proportion())
+        miner_costs = self._power_model.get_total_miner_costs()*self._yearly_miner_costs_fraction
 
 
-        return bitcoin_mining_revenue - operating_costs
+        return bitcoin_mining_revenue - operating_costs - miner_costs
     
     def get_combined_net_revenue_per_sample(self) -> np.ndarray:
         return self.get_annual_miner_net_revenue_per_sample() + self.get_annual_land_fill_hash_revenue_per_sample()

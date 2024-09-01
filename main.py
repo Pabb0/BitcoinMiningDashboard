@@ -60,6 +60,14 @@ def main(asic_miners, financial_model: FinancialModel):
         format="%.2f",
         value=0.02
     )
+    yearly_miner_costs_fraction = st.sidebar.slider(
+        "Yearly Purchase Cost of Miners to Incorporate", 
+        min_value=0.0,
+        max_value=1.0, 
+        step=0.01, 
+        format="%.2f",
+        value=0.0
+    )
     hash_price_mean = st.sidebar.slider(
         "Mean Hash Price", 
         min_value=0.0,
@@ -101,6 +109,9 @@ def main(asic_miners, financial_model: FinancialModel):
 
     financial_model.set_mining_pool_fees(
         mining_pool_fees=mining_pool_fees
+    )
+    financial_model.set_yearly_miner_costs_fraction(
+        yearly_miner_costs_fraction=yearly_miner_costs_fraction
     )
     financial_model.set_hash_price_mean(
         hash_price_mean=hash_price_mean
