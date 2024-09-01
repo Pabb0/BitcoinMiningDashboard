@@ -17,9 +17,6 @@ class PowerModel():
         self._opex_proportion: float = opex_proportion
         self._electricity_available_year: float = electricity_available_year
 
-        HOURS_PER_YEAR = 24*365.25
-        WH_PER_KWH = 1000
-        self._rigs_deployed = (WH_PER_KWH*self._electricity_available_year) / (HOURS_PER_YEAR*self._miner_power_use)
 
     def set_miner(self, miner_characteristics: Dict[str, Union[str, float]]):
         assert set(miner_characteristics).issuperset({'name', 'hash', 'power_use', 'cost'})
@@ -55,7 +52,13 @@ class PowerModel():
     
     def set_electricity_available_year(self, electricity_available_year: float):
         self._electricity_available_year = electricity_available_year
-    
+        self.update_rigs_deployed()
+
+    def update_rigs_deployed(self):
+        HOURS_PER_YEAR = 24*365.25
+        WH_PER_KWH = 1000
+        self._rigs_deployed = (WH_PER_KWH*self._electricity_available_year) / (HOURS_PER_YEAR*self._miner_power_use)
+
     def get_electricity_available_year(self):
         return self._electricity_available_year
 

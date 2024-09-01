@@ -73,10 +73,9 @@ class FinancialModel():
     def get_annual_miner_net_revenue_per_sample(self) -> np.ndarray:
         bitcoin_mining_revenue = self.get_annual_miner_hash_revenue_per_sample()*(1 - self._mining_pool_fees) 
         operating_costs = self.get_annual_electricity_cost_of_mining_per_sample() * (1 + self._power_model.get_opex_proportion())
-        miner_costs = self._power_model.get_total_miner_costs() / 2
 
 
-        return bitcoin_mining_revenue - operating_costs - miner_costs
+        return bitcoin_mining_revenue - operating_costs
     
     def get_combined_net_revenue_per_sample(self) -> np.ndarray:
         return self.get_annual_miner_net_revenue_per_sample() + self.get_annual_land_fill_hash_revenue_per_sample()
